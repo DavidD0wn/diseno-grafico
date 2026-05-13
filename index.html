@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorando el Lenguaje Digital del Diseño</title>
+  <style>
+    /* ===== RESET & BASE ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #f4f7fb;
+      color: #1a1a2e;
+      line-height: 1.65;
+    }
+
+    /* ===== VARIABLES ===== */
+    :root {
+      --blue-dark: #1F4E79;
+      --blue-mid:  #2E75B6;
+      --blue-light:#D6E4F0;
+      --accent:    #41B3E8;
+      --green:     #27AE60;
+      --red:       #E74C3C;
+      --orange:    #F39C12;
+      --purple:    #9B59B6;
+      --teal:      #16A085;
+      --white:     #ffffff;
+      --gray-bg:   #f4f7fb;
+      --gray-card: #ffffff;
+      --text-mid:  #4A5568;
+      --shadow:    0 4px 18px rgba(0,0,0,0.08);
+      --radius:    12px;
+    }
+
+    /* ===== TYPOGRAPHY ===== */
+    h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; }
+    h2 { font-size: clamp(1.4rem, 3vw, 2rem);  font-weight: 700; }
+    h3 { font-size: clamp(1.1rem, 2vw, 1.35rem); font-weight: 700; }
+    h4 { font-size: 1rem; font-weight: 700; }
+    p, li { font-size: 0.97rem; }
+
+    /* ===== NAV ===== */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--blue-dark);
+      display: flex; align-items: center; gap: 0;
+      padding: 0 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    nav a {
+      color: #a0c4e8; text-decoration: none;
+      font-size: 0.82rem; font-weight: 600; letter-spacing: 0.03em;
+      padding: 1rem 0.9rem;
+      transition: color .2s, border-bottom .2s;
+      border-bottom: 3px solid transparent;
+    }
+    nav a:hover, nav a.active { color: #fff; border-bottom-color: var(--accent); }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, #0d2a4a 0%, var(--blue-dark) 50%, #1a5276 100%);
+      color: white;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 40px,
+        rgba(255,255,255,0.02) 40px, rgba(255,255,255,0.02) 80px
+      );
+    }
+    .hero-badge {
+      display: inline-block;
+      background: var(--accent); color: white;
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem; border-radius: 20px;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 { margin-bottom: 1rem; position: relative; }
+    .hero p  { font-size: 1.15rem; color: #a0c4e8; max-width: 640px; margin: 0 auto 2rem; position: relative; }
+    .hero-dots { display: flex; justify-content: center; gap: 0.6rem; margin-top: 2.5rem; }
+    .hero-dots span {
+      width: 14px; height: 14px; border-radius: 50%;
+    }
+    .hero-dots span:nth-child(1) { background: #E74C3C; }
+    .hero-dots span:nth-child(2) { background: #2ECC71; }
+    .hero-dots span:nth-child(3) { background: var(--accent); }
+
+    /* ===== INDEX CARDS ===== */
+    .index-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+      padding: 2.5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .index-card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      display: flex; align-items: flex-start; gap: 1rem;
+      box-shadow: var(--shadow);
+      text-decoration: none; color: inherit;
+      border-left: 4px solid var(--blue-mid);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .index-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.12); }
+    .index-card .num {
+      font-size: 1.6rem; font-weight: 900;
+      color: var(--blue-mid); min-width: 2rem;
+    }
+    .index-card h4 { color: var(--blue-dark); margin-bottom: 0.2rem; }
+    .index-card p  { font-size: 0.82rem; color: var(--text-mid); }
+
+    /* ===== SECTION WRAPPER ===== */
+    section {
+      padding: 3.5rem 1.5rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .section-header {
+      display: flex; align-items: center; gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .section-num {
+      background: var(--blue-dark); color: white;
+      font-size: 1.2rem; font-weight: 900;
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .section-header h2 { color: var(--blue-dark); }
+
+    /* ===== DIVIDER ===== */
+    .section-divider {
+      border: none; border-top: 2px solid var(--blue-light);
+      max-width: 1100px; margin: 0 auto;
+    }
+
+    /* ===== SUBSECTION ===== */
+    .subsection { margin-bottom: 2.5rem; }
+    .subsection h3 {
+      color: var(--blue-mid);
+      margin-bottom: 1rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 2px solid var(--blue-light);
+    }
+
+    /* ===== TIP BOX ===== */
+    .tip {
+      background: var(--blue-light);
+      border-left: 5px solid var(--accent);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      padding: 1rem 1.2rem;
+      margin: 1.2rem 0;
+      font-size: 0.93rem;
+    }
+    .tip strong { color: var(--blue-dark); }
+
+    /* ===== COMPARE CARDS (RGB vs CMYK) ===== */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+    .compare-card {
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      box-shadow: var(--shadow);
+    }
+    .compare-card.rgb  { background: #1a1a2e; color: white; }
+    .compare-card.cmyk { background: var(--white); color: var(--blue-dark); border: 2px solid var(--blue-mid); }
+    .compare-card h3   { font-size: 1.5rem; margin-bottom: 0.3rem; }
+    .compare-card .sub { font-size: 0.82rem; opacity: 0.7; margin-bottom: 1rem; }
+    .compare-card ul   { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .compare-card ul li::before { content: '▸ '; color: var(--accent); font-weight: 700; }
+    .compare-card.cmyk ul li::before { color: var(--blue-mid); }
+    .color-dots { display: flex; gap: 0.5rem; margin-bottom: 1rem; }
+    .cdot { width: 22px; height: 22px; border-radius: 4px; }
+
+    /* ===== TABLES ===== */
+    .tbl-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; border-radius: var(--radius); box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; background: white; }
+    thead th {
+      background: var(--blue-dark); color: white;
+      padding: 0.75rem 1rem; text-align: left;
+      font-size: 0.88rem; font-weight: 700;
+    }
+    tbody tr:nth-child(even) { background: var(--gray-bg); }
+    tbody tr:hover { background: var(--blue-light); }
+    td { padding: 0.65rem 1rem; font-size: 0.88rem; border-bottom: 1px solid #e5e9f0; vertical-align: top; }
+    .tag {
+      display: inline-block;
+      padding: 0.2rem 0.7rem; border-radius: 20px;
+      font-size: 0.75rem; font-weight: 700;
+    }
+    .tag-green  { background:#d4efdf; color:#1e8449; }
+    .tag-blue   { background:#d6e4f0; color:#1a5276; }
+    .tag-orange { background:#fdebd0; color:#ca6f1e; }
+    .tag-red    { background:#fadbd8; color:#a93226; }
+    .tag-purple { background:#e8daef; color:#6c3483; }
+    .tag-gray   { background:#eaecee; color:#555; }
+
+    /* ===== CARD GRID ===== */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .card {
+      background: var(--white);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--blue-mid);
+    }
+    .card h4 { color: var(--blue-dark); margin-bottom: 0.5rem; }
+    .card p  { font-size: 0.85rem; color: var(--text-mid); }
+    .card .gram { font-size: 0.78rem; color: var(--accent); font-weight: 700; margin-top: 0.5rem; }
+
+    /* ===== COLOR BAR (gramaje) ===== */
+    .gram-bar-wrap { display: flex; align-items: flex-end; gap: 6px; margin: 1.5rem 0; height: 180px; }
+    .gram-bar {
+      flex: 1; border-radius: 6px 6px 0 0;
+      display: flex; flex-direction: column; justify-content: flex-end;
+      align-items: center; padding-bottom: 0.5rem;
+      color: white; font-size: 0.75rem; font-weight: 700; text-align: center;
+      transition: opacity .2s;
+    }
+    .gram-bar:hover { opacity: 0.85; }
+    .gram-bar span { font-size: 0.65rem; opacity: 0.85; margin-top: 2px; }
+
+    /* ===== STEPS ===== */
+    .steps { display: flex; flex-direction: column; gap: 0.6rem; margin: 1rem 0; }
+    .step {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      background: white; border-radius: 8px; padding: 0.7rem 1rem;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .step-num {
+      background: var(--blue-mid); color: white;
+      font-size: 0.8rem; font-weight: 900;
+      width: 26px; height: 26px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .step p { font-size: 0.9rem; margin: 0; }
+
+    /* ===== BLEED DIAGRAM ===== */
+    .bleed-diagram {
+      display: flex; justify-content: center; padding: 1.5rem 0;
+    }
+    .bleed-outer {
+      width: 240px; height: 300px;
+      background: #ffd6cc; border: 2px dashed #e74c3c;
+      border-radius: 4px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .bleed-cut {
+      width: 204px; height: 264px;
+      background: var(--blue-light); border: 2px solid var(--blue-mid);
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+    }
+    .bleed-safe {
+      width: 168px; height: 228px;
+      background: #e8f5e9; border: 2px dashed var(--green);
+      border-radius: 2px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .bleed-label-outer {
+      position: absolute; top: -22px; left: 50%; transform: translateX(-50%);
+      font-size: 0.7rem; font-weight: 700; color: #e74c3c; white-space: nowrap;
+    }
+    .bleed-label-cut {
+      position: absolute; bottom: -22px; left: 50%; transform: translateX(-50%);
+      font-size: 0.7rem; font-weight: 700; color: var(--blue-mid); white-space: nowrap;
+    }
+    .bleed-label-safe {
+      font-size: 0.7rem; font-weight: 700; color: var(--green); text-align: center;
+      line-height: 1.4;
+    }
+    .bleed-legend { margin-left: 2rem; display: flex; flex-direction: column; gap: 1rem; justify-content: center; }
+    .bleed-legend-item { display: flex; align-items: center; gap: 0.6rem; font-size: 0.88rem; }
+    .bleed-legend-dot { width: 16px; height: 16px; border-radius: 3px; flex-shrink: 0; }
+
+    /* ===== EXPORT TABLE ===== */
+    .fmt-compare { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1rem 0; }
+    @media (max-width: 600px) { .fmt-compare { grid-template-columns: 1fr; } }
+    .fmt-card {
+      border-radius: var(--radius); padding: 1.2rem;
+      box-shadow: var(--shadow); text-align: center;
+    }
+    .fmt-card h3 { font-size: 1.4rem; margin-bottom: 0.3rem; }
+    .fmt-card .fmt-sub { font-size: 0.75rem; margin-bottom: 0.8rem; opacity: 0.8; }
+    .fmt-row { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.3rem 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .fmt-row:last-child { border-bottom: none; }
+    .fmt-val { font-weight: 700; }
+
+    /* ===== GLOSARIO ===== */
+    .glossary-grid { display: flex; flex-direction: column; gap: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .glossary-row {
+      display: grid; grid-template-columns: 180px 1fr;
+      background: white;
+    }
+    .glossary-row:nth-child(even) { background: var(--gray-bg); }
+    .glossary-term {
+      background: var(--blue-dark); color: white;
+      padding: 0.75rem 1rem;
+      font-weight: 700; font-size: 0.88rem;
+      display: flex; align-items: center;
+    }
+    .glossary-def { padding: 0.75rem 1rem; font-size: 0.88rem; }
+    @media (max-width: 500px) {
+      .glossary-row { grid-template-columns: 1fr; }
+      .glossary-term { border-bottom: none; }
+    }
+
+    /* ===== TRENDS ===== */
+    .trends-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+    }
+    .trend-card {
+      background: white;
+      border-radius: var(--radius); padding: 1.2rem;
+      box-shadow: var(--shadow);
+      border-left: 4px solid var(--blue-mid);
+    }
+    .trend-card .trend-icon { font-size: 1.8rem; margin-bottom: 0.5rem; }
+    .trend-card h4 { color: var(--blue-dark); margin-bottom: 0.4rem; }
+    .trend-card p  { font-size: 0.85rem; color: var(--text-mid); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--blue-dark); color: #a0c4e8;
+      text-align: center; padding: 2.5rem 1rem;
+      font-size: 0.88rem;
+      margin-top: 3rem;
+    }
+    footer strong { color: white; }
+
+    /* ===== PROFILE CARDS ===== */
+    .profile-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .profile-card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      background: white;
+    }
+    .profile-card-header {
+      padding: 0.8rem 1rem;
+      font-weight: 700; font-size: 1rem; color: white;
+    }
+    .profile-card-body { padding: 0.9rem 1rem; }
+    .profile-card-body p { font-size: 0.84rem; color: var(--text-mid); }
+    .profile-card-body .prow { display: flex; justify-content: space-between; font-size: 0.82rem; padding: 0.25rem 0; border-bottom: 1px solid #eee; }
+    .profile-card-body .prow:last-child { border-bottom: none; }
+    .prow .pk { font-weight: 600; color: var(--blue-dark); }
+
+    /* ===== PROOF CARDS ===== */
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .proof-card {
+      background: white; border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .proof-card-header {
+      padding: 0.9rem 1rem; color: white;
+      font-weight: 700;
+    }
+    .proof-card-body { padding: 0.9rem 1rem; font-size: 0.87rem; color: var(--text-mid); }
+    .proof-card-body .when { font-size: 0.78rem; color: var(--blue-mid); font-weight: 700; margin-top: 0.5rem; }
+
+    /* ===== APPS STEPS ===== */
+    .apps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
+    .app-card { background: white; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
+    .app-header { padding: 1rem; color: white; font-size: 1.1rem; font-weight: 800; }
+    .app-steps { padding: 1rem; display: flex; flex-direction: column; gap: 0.45rem; }
+    .app-step { display: flex; gap: 0.6rem; align-items: flex-start; font-size: 0.87rem; }
+    .app-step-num { min-width: 22px; height: 22px; border-radius: 50%; color: white; font-size: 0.75rem; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav>
+  <a href="#inicio">Inicio</a>
+  <a href="#color">Color</a>
+  <a href="#formatos">Formatos</a>
+  <a href="#papel">Papel</a>
+  <a href="#archivos">Archivos</a>
+  <a href="#glosario">Glosario</a>
+  <a href="#ejercicio">Ejercicio</a>
+</nav>
+
+<!-- ===== HERO ===== -->
+<div id="inicio" style="background: linear-gradient(135deg, #0d2a4a 0%, #1F4E79 55%, #1a5276 100%); color:white; padding: 5rem 2rem 4rem; text-align:center; position:relative; overflow:hidden;">
+  <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,0.02) 40px,rgba(255,255,255,0.02) 80px);"></div>
+  <div style="position:relative; max-width:800px; margin:0 auto;">
+    <span style="display:inline-block;background:#41B3E8;color:white;font-size:0.75rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:0.35rem 1rem;border-radius:20px;margin-bottom:1.5rem;">Trabajo de Consulta · 2026</span>
+    <h1 style="font-size:clamp(1.8rem,5vw,3rem);font-weight:900;margin-bottom:1rem;line-height:1.2;">Explorando el Lenguaje<br>Digital del Diseño</h1>
+    <p style="font-size:1.1rem;color:#a0c4e8;max-width:600px;margin:0 auto 2rem;">El Color, Producción Gráfica y Preparación para Impresión y Formatos</p>
+    <div style="display:flex;justify-content:center;gap:0.6rem;margin-top:2rem;">
+      <span style="width:14px;height:14px;border-radius:50%;background:#E74C3C;display:inline-block;"></span>
+      <span style="width:14px;height:14px;border-radius:50%;background:#2ECC71;display:inline-block;"></span>
+      <span style="width:14px;height:14px;border-radius:50%;background:#41B3E8;display:inline-block;"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ===== INDEX ===== -->
+<div style="background:white; padding:2.5rem 1.5rem;">
+  <div style="max-width:1100px;margin:0 auto;">
+    <h2 style="color:#1F4E79;text-align:center;margin-bottom:1.5rem;">Contenido del Trabajo</h2>
+    <div class="index-grid" style="padding:0;">
+      <a class="index-card" href="#color"><span class="num">01</span><div><h4>Sistema de Color CMYK y RGB</h4><p>Diferencias, espacios de color, perfiles ICC y pruebas cromáticas</p></div></a>
+      <a class="index-card" href="#formatos"><span class="num">02</span><div><h4>Formatos de Impresión</h4><p>Series ISO A, B, C y formatos especiales sobremedida</p></div></a>
+      <a class="index-card" href="#papel"><span class="num">03</span><div><h4>Tipos de Papel y Sustratos</h4><p>Clasificación, sustratos especiales y gramaje</p></div></a>
+      <a class="index-card" href="#archivos"><span class="num">04</span><div><h4>Archivos Finales para Impresión</h4><p>Formatos, resolución, sangrado y exportación en Adobe CC</p></div></a>
+      <a class="index-card" href="#glosario"><span class="num">05</span><div><h4>Glosario del Diseño Digital</h4><p>12 términos esenciales definidos con claridad</p></div></a>
+      <a class="index-card" href="#ejercicio"><span class="num">06</span><div><h4>Ejercicio Práctico</h4><p>Comparativa SVG, PNG y JPG de un ícono exportado</p></div></a>
+    </div>
+  </div>
+</div>
+
+<!-- ========================================================= -->
+<!-- SECCIÓN 1: COLOR -->
+<!-- ========================================================= -->
+<hr class="section-divider" />
+<section id="color">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Sistema de Color CMYK y RGB</h2>
+  </div>
+
+  <!-- 1.1 -->
+  <div class="subsection">
+    <h3>1.1 Diferencias entre RGB y CMYK</h3>
+    <p style="margin-bottom:1.2rem;">Existen dos sistemas principales de color en diseño gráfico. Su elección determina la fidelidad cromática del resultado final tanto en pantalla como en impresión.</p>
+    <div class="compare-grid">
+      <div class="compare-card rgb">
+        <h3 style="color:#41B3E8;">RGB</h3>
+        <div class="sub">Red · Green · Blue — Modelo aditivo de luz</div>
+        <div class="color-dots">
+          <div class="cdot" style="background:#E74C3C;"></div>
+          <div class="cdot" style="background:#2ECC71;"></div>
+          <div class="cdot" style="background:#3498DB;"></div>
+        </div>
+        <ul>
+          <li>Modelo <strong style="color:#41B3E8;">aditivo</strong> (mezcla de luz)</li>
+          <li>Valores: <strong style="color:#41B3E8;">0 a 255</strong> por canal</li>
+          <li>16.7 millones de colores posibles</li>
+          <li><strong style="color:#41B3E8;">Mayor gamut</strong> — incluye colores neón</li>
+          <li>Pantallas, web, video, redes sociales</li>
+        </ul>
+      </div>
+      <div class="compare-card cmyk">
+        <h3 style="color:#1F4E79;">CMYK</h3>
+        <div class="sub" style="color:#555;">Cyan · Magenta · Yellow · Key (Black)</div>
+        <div class="color-dots">
+          <div class="cdot" style="background:#00B4D8;border-radius:0;"></div>
+          <div class="cdot" style="background:#E040FB;border-radius:0;"></div>
+          <div class="cdot" style="background:#FFD600;border-radius:0;"></div>
+          <div class="cdot" style="background:#212121;border-radius:0;"></div>
+        </div>
+        <ul>
+          <li>Modelo <strong>sustractivo</strong> (mezcla de tinta)</li>
+          <li>Valores: <strong>0 % a 100 %</strong> por canal</li>
+          <li>Gamut menor que RGB</li>
+          <li>Colores saturados "se apagan" al convertir</li>
+          <li>Impresión offset, serigrafía, flexografía</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Característica</th><th>RGB</th><th>CMYK</th></tr></thead>
+        <tbody>
+          <tr><td>Tipo de mezcla</td><td>Aditivo (luz)</td><td>Sustractivo (pigmento/tinta)</td></tr>
+          <tr><td>Rango de valores</td><td>0 – 255 por canal</td><td>0 % – 100 % por canal</td></tr>
+          <tr><td>Gamut (rango de color)</td><td><span class="tag tag-green">Amplio</span></td><td><span class="tag tag-orange">Más limitado</span></td></tr>
+          <tr><td>Perfiles comunes</td><td>sRGB, Adobe RGB</td><td>ISO Coated v2, SWOP</td></tr>
+          <tr><td>Uso principal</td><td>Pantallas, web, multimedia</td><td>Impresión offset, papelería</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>⚠ Regla de Oro:</strong> Si el proyecto es para pantalla (web, app, redes) usa <strong>RGB</strong>. Si va a imprimirse en papel, trabaja en <strong>CMYK desde el inicio</strong>. Convertir al final provoca que los colores muy saturados se "apaguen".</div>
+  </div>
+
+  <!-- 1.2 Perfiles -->
+  <div class="subsection">
+    <h3>1.2 Espacios de Color y Perfiles de Color (ICC)</h3>
+    <p style="margin-bottom:1.2rem;">Un perfil de color (ICC Profile) es un archivo que describe con precisión cómo un dispositivo o estándar reproduce los colores. Incrustar el perfil correcto garantiza que lo que ves en pantalla sea lo más parecido posible a lo que saldrá impreso.</p>
+    <div class="profile-grid">
+      <div class="profile-card">
+        <div class="profile-card-header" style="background:#3498DB;">sRGB</div>
+        <div class="profile-card-body">
+          <div class="prow"><span class="pk">Uso</span><span>Web, pantallas</span></div>
+          <div class="prow"><span class="pk">Gamut</span><span>Estándar (medio)</span></div>
+          <div class="prow"><span class="pk">Soporte</span><span>Universal</span></div>
+          <p style="margin-top:0.5rem;">El más compatible. Recomendado para todo contenido digital y fotografía online.</p>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-card-header" style="background:#E74C3C;">Adobe RGB (1998)</div>
+        <div class="profile-card-body">
+          <div class="prow"><span class="pk">Uso</span><span>Fotografía profesional</span></div>
+          <div class="prow"><span class="pk">Gamut</span><span>Amplio</span></div>
+          <div class="prow"><span class="pk">Soporte</span><span>Software profesional</span></div>
+          <p style="margin-top:0.5rem;">Mayor rango cromático que sRGB. Ideal para preprensa y fotografía de alta calidad.</p>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-card-header" style="background:#27AE60;">ISO Coated v2 (FOGRA39)</div>
+        <div class="profile-card-body">
+          <div class="prow"><span class="pk">Uso</span><span>Offset Europa</span></div>
+          <div class="prow"><span class="pk">Estándar</span><span>ISO 12647-2</span></div>
+          <div class="prow"><span class="pk">Papel</span><span>Estucado</span></div>
+          <p style="margin-top:0.5rem;">Estándar de la industria gráfica europea para papel estucado en impresión offset.</p>
+        </div>
+      </div>
+      <div class="profile-card">
+        <div class="profile-card-header" style="background:#F39C12;">SWOP v2</div>
+        <div class="profile-card-body">
+          <div class="prow"><span class="pk">Uso</span><span>Offset América</span></div>
+          <div class="prow"><span class="pk">Estándar</span><span>ANSI/CGATS</span></div>
+          <div class="prow"><span class="pk">Región</span><span>Norteamérica</span></div>
+          <p style="margin-top:0.5rem;">Estándar norteamericano para revistas y publicaciones en impresión offset.</p>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><strong>💡 Consejo profesional:</strong> Siempre <strong>incrusta (embed) el perfil de color</strong> en los archivos finales. En Photoshop: Edición → Configuración de Color → "Incrustar perfil". Sin él, el impresor puede interpretar los colores de forma diferente.</div>
+  </div>
+
+  <!-- 1.3 Pruebas -->
+  <div class="subsection">
+    <h3>1.3 Tipos de Pruebas de Color</h3>
+    <p style="margin-bottom:1.2rem;">Las pruebas de color permiten verificar el resultado cromático antes de realizar la tirada completa, evitando errores costosos.</p>
+    <div class="proof-grid">
+      <div class="proof-card">
+        <div class="proof-card-header" style="background:#3498DB;">01 — Soft Proof (Prueba Digital)</div>
+        <div class="proof-card-body">
+          <p>Simulación en pantalla calibrada del resultado impreso. Se activa en Photoshop/InDesign con <em>Vista → Colores de prueba</em>.</p>
+          <div class="when">✔ Usar: durante el proceso de diseño, sin costo.</div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-header" style="background:#E74C3C;">02 — Hard Proof (Prueba de Contrato)</div>
+        <div class="proof-card-body">
+          <p>Impresión física certificada que simula la tirada final con tinta real. Tiene <strong>valor legal</strong> como contrato entre cliente e impresor.</p>
+          <div class="when">✔ Usar: antes de aprobar tiradas grandes.</div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-header" style="background:#27AE60;">03 — Cromalin / Iris</div>
+        <div class="proof-card-body">
+          <p>Impresión de alta calidad sobre sustrato especial que simula el papel final. Para proyectos premium: libros de arte, empaques de lujo.</p>
+          <div class="when">✔ Usar: proyectos de alta calidad con exigencia cromática.</div>
+        </div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-card-header" style="background:#9B59B6;">04 — Press Proof (Prueba de Pliego)</div>
+        <div class="proof-card-body">
+          <p>Se imprime en la propia máquina de impresión con el papel real antes de la tirada completa. La prueba más fiel.</p>
+          <div class="when">✔ Usar: tiradas grandes donde el costo de reimpresión sería muy alto.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- SECCIÓN 2: FORMATOS -->
+<!-- ========================================================= -->
+<hr class="section-divider" />
+<section id="formatos">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Formatos de Impresión Principales</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>2.1 Formatos de Papel ISO — Series A, B y C</h3>
+    <p style="margin-bottom:1.2rem;">El sistema ISO 216 estandariza los tamaños de papel en todo el mundo. La proporción siempre es <strong>1:√2 (1:1.414)</strong>, lo que permite escalar sin distorsión entre tamaños.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Serie</th><th>Formato</th><th>Dimensiones (mm)</th><th>Aplicación típica</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A0</td><td>841 × 1189</td><td>Planos técnicos, posters grandes, carteles</td></tr>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A1</td><td>594 × 841</td><td>Afiches, planos, presentaciones de gran formato</td></tr>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A2</td><td>420 × 594</td><td>Pósters, láminas educativas, planos reducidos</td></tr>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A3</td><td>297 × 420</td><td>Folletos dobles, planos, presentaciones impresas</td></tr>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A4</td><td>210 × 297</td><td>Documentos, cartas, revistas, formularios — estándar universal</td></tr>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A5</td><td>148 × 210</td><td>Cuadernos, folletos, recetarios, invitaciones</td></tr>
+          <tr><td><span class="tag tag-blue">A</span></td><td>A6</td><td>105 × 148</td><td>Postales, tarjetas, mini folletos</td></tr>
+          <tr><td><span class="tag tag-orange">B</span></td><td>B1</td><td>707 × 1000</td><td>Afiches publicitarios, cartelería exterior</td></tr>
+          <tr><td><span class="tag tag-orange">B</span></td><td>B2</td><td>500 × 707</td><td>Pósters medianos, carteles de tiendas</td></tr>
+          <tr><td><span class="tag tag-green">C</span></td><td>C4</td><td>229 × 324</td><td>Sobre para hoja A4 sin doblar</td></tr>
+          <tr><td><span class="tag tag-green">C</span></td><td>C5</td><td>162 × 229</td><td>Sobre para hoja A4 doblada a la mitad</td></tr>
+          <tr><td><span class="tag tag-green">C</span></td><td>C6</td><td>114 × 162</td><td>Sobre para hoja A4 en cuartos (A6)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>📐 Relación matemática:</strong> Cada formato A se obtiene dividiendo el anterior por la mitad en su lado más largo. La proporción 1:√2 permite escalar de A4 a A3 con exactamente el doble de área, sin distorsión.</div>
+  </div>
+
+  <div class="subsection">
+    <h3>2.2 Formatos Especiales y Sobremedidas</h3>
+    <p style="margin-bottom:1.2rem;">Cuando los proyectos no encajan en formatos estándar, se usan formatos especiales o sobremedidas. Comunes en publicidad exterior, empaques y materiales promocionales.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Tipo</th><th>Dimensiones ejemplo</th><th>Aplicaciones</th></tr></thead>
+        <tbody>
+          <tr><td>Banner vertical</td><td>600 × 1800 mm</td><td>Publicidad en puntos de venta, exhibiciones</td></tr>
+          <tr><td>Banner horizontal (lona)</td><td>3000 × 1000 mm</td><td>Lonas publicitarias, vallas interiores</td></tr>
+          <tr><td>Valla exterior (billboard)</td><td>8000 × 3000 mm</td><td>Publicidad en carreteras y ciudades</td></tr>
+          <tr><td>Roll-Up</td><td>850 × 2000 mm</td><td>Presentaciones, ferias, eventos corporativos</td></tr>
+          <tr><td>Empaque caja (troquel)</td><td>Variable según producto</td><td>Cajas de productos, packaging de retail</td></tr>
+          <tr><td>Tarjeta de presentación</td><td>90 × 50 mm (estándar)</td><td>Tarjetas corporativas, identidad personal</td></tr>
+          <tr><td>Flyer media carta</td><td>140 × 216 mm</td><td>Promociones, eventos, menús</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>⚠ Para formatos sobremedida:</strong> Siempre consulta con el impresor el tamaño máximo de impresión de su equipo antes de diseñar. Las impresoras de gran formato (plotter) generalmente imprimen hasta <strong>1524 mm de ancho (60 pulgadas)</strong> en rollo continuo.</div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- SECCIÓN 3: PAPEL -->
+<!-- ========================================================= -->
+<hr class="section-divider" />
+<section id="papel">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Tipos de Papel y Sustratos</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>3.1 Clasificación de Papeles</h3>
+    <p style="margin-bottom:1.2rem;">La elección del papel afecta directamente la apariencia, durabilidad y percepción del proyecto. Conocer sus características permite tomar decisiones técnicas y estéticas acertadas.</p>
+    <div class="card-grid">
+      <div class="card" style="border-top-color:#41B3E8;">
+        <h4>Estucado Brillo (Couché)</h4>
+        <p>Superficie lisa y lustrada. Colores vívidos y saturados. Aspecto llamativo.</p>
+        <div class="gram">90 – 350 g/m² · Revistas, catálogos, folletos</div>
+      </div>
+      <div class="card" style="border-top-color:#5B9BD5;">
+        <h4>Estucado Mate</h4>
+        <p>Sin reflejo. Lectura cómoda. Aspecto sofisticado y premium.</p>
+        <div class="gram">90 – 350 g/m² · Libros corporativos, anuarios</div>
+      </div>
+      <div class="card" style="border-top-color:#27AE60;">
+        <h4>Offset (No Estucado)</h4>
+        <p>Superficie rugosa. Absorbe más tinta. Aspecto natural y cálido.</p>
+        <div class="gram">60 – 300 g/m² · Libros, cuadernos, formularios</div>
+      </div>
+      <div class="card" style="border-top-color:#F39C12;">
+        <h4>Reciclado</h4>
+        <p>Tono ligeramente crema o gris. Textura visible. Sostenible.</p>
+        <div class="gram">80 – 200 g/m² · Proyectos ecológicos, editorial artesanal</div>
+      </div>
+      <div class="card" style="border-top-color:#9B59B6;">
+        <h4>Texturado</h4>
+        <p>Relieve en superficie (lino, grano, verjurado). Aspecto artesanal y de lujo.</p>
+        <div class="gram">120 – 300 g/m² · Invitaciones, papelería premium</div>
+      </div>
+      <div class="card" style="border-top-color:#16A085;">
+        <h4>Translúcido / Vegetal</h4>
+        <p>Semi-transparente. Deja ver lo que hay detrás. Efecto decorativo.</p>
+        <div class="gram">40 – 90 g/m² · Calcos, sobres, capas en packaging</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>3.2 Sustratos Especiales</h3>
+    <p style="margin-bottom:1.2rem;">Más allá del papel, la impresión moderna permite trabajar sobre una gran variedad de sustratos. Cada material tiene propiedades que condicionan el tipo de impresión y la durabilidad del resultado.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Sustrato</th><th>Características</th><th>Tipo de impresión</th><th>Aplicaciones</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Vinilo autoadhesivo</strong></td><td>Flexible, resistente a la intemperie, fácil de aplicar</td><td>Eco-solvente, UV</td><td>Señalética, rotulación de vehículos, stickers</td></tr>
+          <tr><td><strong>Vinilo textil (heat transfer)</strong></td><td>Flexible, lavable; se aplica con calor</td><td>Sublimación, DTF</td><td>Camisetas, uniformes deportivos</td></tr>
+          <tr><td><strong>Lona PVC (banner)</strong></td><td>Resistente al viento y agua; alta durabilidad exterior</td><td>Solvente, látex</td><td>Lonas, banners, carpas publicitarias</td></tr>
+          <tr><td><strong>Tela / Canvas</strong></td><td>Aspecto artístico; textura visible</td><td>Sublimación, pigmento</td><td>Fotografías de arte, decoración, exhibiciones</td></tr>
+          <tr><td><strong>Cartón corrugado</strong></td><td>Ligero, resistente, aislante; fácilmente troquelado</td><td>Flexografía, offset, digital</td><td>Empaques de transporte, displays, packaging</td></tr>
+          <tr><td><strong>Rígido PVC / Forex</strong></td><td>Plancha rígida y ligera; no se dobla</td><td>UV plano, serigrafía</td><td>Señalética interior, exhibidores, letreros</td></tr>
+          <tr><td><strong>Acrílico (metacrilato)</strong></td><td>Transparente o coloreado; aspecto premium</td><td>UV plano, grabado láser</td><td>Señalética de lujo, decoración, premios</td></tr>
+          <tr><td><strong>Tyvek</strong></td><td>Material no tejido; resistente al agua y desgarro</td><td>Offset, digital</td><td>Etiquetas industriales, mapas, pulseras</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>🌧 Para impresión exterior:</strong> Especifica siempre que el trabajo será de exterior. Los sustratos y tintas deben tener <strong>resistencia UV</strong> para evitar que los colores se desvanezcan. Las tintas eco-solvente o UV ofrecen mejor durabilidad que las de base agua.</div>
+  </div>
+
+  <div class="subsection">
+    <h3>3.3 Peso y Gramaje</h3>
+    <p style="margin-bottom:1rem;">El gramaje es el peso de un metro cuadrado de papel expresado en gramos por metro cuadrado <strong>(g/m²)</strong>. Es el indicador principal de rigidez, grosor y calidad percibida.</p>
+    <div class="gram-bar-wrap">
+      <div class="gram-bar" style="background:#BDC3C7;height:30%;"><strong>60–90</strong><span>Fotocopiadora</span></div>
+      <div class="gram-bar" style="background:#85C1E9;height:46%;"><strong>100–130</strong><span>Folletos</span></div>
+      <div class="gram-bar" style="background:#5B9BD5;height:60%;"><strong>150–200</strong><span>Volantes premium</span></div>
+      <div class="gram-bar" style="background:#2E75B6;height:78%;"><strong>220–300</strong><span>Tarjetas</span></div>
+      <div class="gram-bar" style="background:#1F4E79;height:100%;"><strong>350–400+</strong><span>Packaging</span></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Rango</th><th>Tipo de uso</th><th>Ejemplos</th></tr></thead>
+        <tbody>
+          <tr><td>40 – 60 g/m²</td><td>Papel muy delgado</td><td>Periódico, papel biblia, calcos técnicos</td></tr>
+          <tr><td>70 – 90 g/m²</td><td>Papel estándar de oficina</td><td>Fotocopiadora (80 g/m² es el más común)</td></tr>
+          <tr><td>100 – 130 g/m²</td><td>Impresión gráfica media</td><td>Folletos, dípticos, revistas interiores</td></tr>
+          <tr><td>150 – 200 g/m²</td><td>Impresión de calidad; rigidez media</td><td>Tarjetas postales, volantes premium</td></tr>
+          <tr><td>220 – 300 g/m²</td><td>Cartón delgado; alta rigidez</td><td>Tarjetas de presentación, tapas de cuadernos</td></tr>
+          <tr><td>350 – 400 g/m²</td><td>Cartón grueso / cartulina</td><td>Cajas de regalo, packaging de cosméticos</td></tr>
+          <tr><td>+400 g/m²</td><td>Cartón industrial</td><td>Cajas de transporte, empaques estructurales</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- SECCIÓN 4: ARCHIVOS -->
+<!-- ========================================================= -->
+<hr class="section-divider" />
+<section id="archivos">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Archivos Finales para Impresión</h2>
+  </div>
+
+  <div class="subsection">
+    <h3>4.1 Formatos de Archivo</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Formato</th><th>Tipo</th><th>Ventajas</th><th>Limitaciones</th><th>Impresión</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>PDF / PDF-X</strong></td><td><span class="tag tag-blue">Mixto</span></td>
+            <td>Autocontenido; incrusta fuentes e imágenes; estándar ISO para preprensa</td>
+            <td>Edición limitada sin software original</td>
+            <td><span class="tag tag-green">★★★★★ Recomendado</span></td>
+          </tr>
+          <tr>
+            <td><strong>TIFF</strong></td><td><span class="tag tag-orange">Raster</span></td>
+            <td>Sin pérdida; soporta capas y canales alfa; alta compatibilidad</td>
+            <td>Archivos muy pesados</td>
+            <td><span class="tag tag-green">★★★★★</span></td>
+          </tr>
+          <tr>
+            <td><strong>EPS</strong></td><td><span class="tag tag-blue">Vectorial</span></td>
+            <td>Compatibilidad con sistemas antiguos; encapsula PostScript</td>
+            <td>Obsoleto; no admite transparencias modernas</td>
+            <td><span class="tag tag-orange">★★★☆☆</span></td>
+          </tr>
+          <tr>
+            <td><strong>AI</strong></td><td><span class="tag tag-blue">Vectorial</span></td>
+            <td>Edición completa en Illustrator; soporte de capas y efectos</td>
+            <td>Solo abre en Adobe Illustrator</td>
+            <td><span class="tag tag-orange">★★★☆☆ (trabajo)</span></td>
+          </tr>
+          <tr>
+            <td><strong>PNG</strong></td><td><span class="tag tag-orange">Raster</span></td>
+            <td>Soporta transparencia (canal alfa); sin pérdida</td>
+            <td>No óptimo para offset profesional</td>
+            <td><span class="tag tag-orange">★★★☆☆</span></td>
+          </tr>
+          <tr>
+            <td><strong>JPEG / JPG</strong></td><td><span class="tag tag-orange">Raster</span></td>
+            <td>Tamaño reducido; amplia compatibilidad</td>
+            <td>Compresión con pérdida; no transparencia</td>
+            <td><span class="tag tag-red">★★☆☆☆ No recomendado</span></td>
+          </tr>
+          <tr>
+            <td><strong>GIF</strong></td><td><span class="tag tag-orange">Raster</span></td>
+            <td>Muy pequeño; soporta animación</td>
+            <td>Solo 256 colores; baja calidad</td>
+            <td><span class="tag tag-red">★☆☆☆☆ Solo web</span></td>
+          </tr>
+          <tr>
+            <td><strong>SVG</strong></td><td><span class="tag tag-blue">Vectorial</span></td>
+            <td>Escalable infinitamente; editable con texto (XML)</td>
+            <td>Soporte limitado en offset tradicional</td>
+            <td><span class="tag tag-orange">★★★★☆ Web/digital</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>🖨 Para envío al impresor:</strong> El formato <strong>PDF/X-1a o PDF/X-4</strong> es el estándar de la industria. Garantiza fuentes embebidas, modo CMYK y sin transparencias no resueltas. Siempre exporta en este estándar.</div>
+  </div>
+
+  <div class="subsection">
+    <h3>4.2 Resolución de Imágenes</h3>
+    <p style="margin-bottom:1.2rem;">La resolución determina la cantidad de información de imagen por pulgada. Se mide en <strong>ppp (puntos por pulgada)</strong> o <strong>dpi (dots per inch)</strong>.</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Resolución</th><th>Uso</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>72 ppp</strong></td><td>Web / Pantalla</td><td>Estándar para monitores. Archivos ligeros. Se pixela en impresión.</td></tr>
+          <tr><td><strong>96 ppp</strong></td><td>Web (Windows)</td><td>Estándar en sistemas Windows. Ligeramente mayor que el 72 ppp tradicional.</td></tr>
+          <tr><td><strong>150 ppp</strong></td><td>Gran formato lejano</td><td>Para posters vistos a +1 metro de distancia. Se aprecian píxeles de cerca.</td></tr>
+          <tr><td><strong>300 ppp ★</strong></td><td><strong>Impresión profesional</strong></td><td><strong>Estándar de la industria.</strong> Folletos, revistas, tarjetas — nítido al verlo de cerca.</td></tr>
+          <tr><td><strong>400 – 600 ppp</strong></td><td>Alta calidad / líneas finas</td><td>Arte lineal, texturas muy finas, sellos de alta calidad.</td></tr>
+          <tr><td><strong>1200 ppp</strong></td><td>Arte lineal puro</td><td>Logotipos en bitmap, líneas finas en offset de máxima calidad.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tip"><strong>📌 Regla de los 300 ppp:</strong> Para impresión offset profesional, trabaja <strong>SIEMPRE a 300 ppp al 100 % del tamaño final</strong>. Una imagen de 72 ppp ampliada para cubrir una página A4 se verá pixelada y borrosa en impresión.</div>
+  </div>
+
+  <div class="subsection">
+    <h3>4.3 Ajustes de Sangrado y Corte</h3>
+    <p style="margin-bottom:1.5rem;">El <strong>sangrado (bleed)</strong> es el área extra que se extiende más allá del borde de corte para asegurar que no queden bordes blancos si la guillotina corta ligeramente desplazada.</p>
+    <div style="display:flex; flex-wrap:wrap; gap:2rem; align-items:center; justify-content:center;">
+      <div class="bleed-diagram">
+        <div style="position:relative;">
+          <div class="bleed-outer">
+            <span class="bleed-label-outer">← Sangrado 3 mm →</span>
+            <div class="bleed-cut">
+              <span class="bleed-label-cut">Línea de corte</span>
+              <div class="bleed-safe">
+                <div class="bleed-label-safe">Área de<br>Seguridad<br>(3 mm interior)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bleed-legend">
+          <div class="bleed-legend-item"><div class="bleed-legend-dot" style="background:#ffd6cc;border:2px dashed #e74c3c;"></div> Zona de sangrado (3 mm)</div>
+          <div class="bleed-legend-item"><div class="bleed-legend-dot" style="background:#D6E4F0;border:2px solid #2E75B6;"></div> Borde de corte (tamaño final)</div>
+          <div class="bleed-legend-item"><div class="bleed-legend-dot" style="background:#e8f5e9;border:2px dashed #27AE60;"></div> Área de seguridad</div>
+        </div>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Elemento</th><th>Medida estándar</th><th>Descripción</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Sangrado (bleed)</strong></td><td>3 mm (offset) / 5 mm (gran formato)</td><td>Extensión de los elementos hasta fuera del borde de corte. Sin sangrado pueden quedar bordes blancos.</td></tr>
+          <tr><td><strong>Línea de corte (trim)</strong></td><td>Borde del documento</td><td>Marca donde la guillotina corta el papel.</td></tr>
+          <tr><td><strong>Área de seguridad</strong></td><td>3–5 mm hacia adentro</td><td>Zona donde NUNCA deben colocarse textos ni elementos importantes.</td></tr>
+          <tr><td><strong>Marcas de corte</strong></td><td>Automáticas al exportar</td><td>Cruces que guían al operador de guillotina para alinear el corte.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>4.4 Exportación en Adobe CC</h3>
+    <div class="apps-grid">
+      <div class="app-card">
+        <div class="app-header" style="background:#FF3366;">InDesign</div>
+        <div class="app-steps">
+          <div class="app-step"><div class="app-step-num" style="background:#FF3366;">1</div><p>Archivo → Exportar → Adobe PDF (Imprimir)</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF3366;">2</div><p>Ajuste: <strong>[PDF/X-1a:2001]</strong> o <strong>[PDF/X-4:2008]</strong></p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF3366;">3</div><p>Activar Marcas de corte y Marcas de registro</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF3366;">4</div><p>Sangrado: Usar configuración del documento</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF3366;">5</div><p>Salida: CMYK + perfil ISO Coated v2</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF3366;">6</div><p>Comprimir imágenes a 300 ppp (Bicubic)</p></div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-header" style="background:#FF7C00;">Illustrator</div>
+        <div class="app-steps">
+          <div class="app-step"><div class="app-step-num" style="background:#FF7C00;">1</div><p>Verificar: Archivo → Modo de color → CMYK</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF7C00;">2</div><p>Configurar sangrado: Archivo → Config. Documento → 3 mm</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF7C00;">3</div><p>Texto → Crear contornos (guardar copia original)</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF7C00;">4</div><p>Archivo → Guardar una copia → Adobe PDF</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF7C00;">5</div><p>Estándar PDF/X-1a; activar marcas de corte</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#FF7C00;">6</div><p>Transparencia → Aplanar → Alta resolución</p></div>
+        </div>
+      </div>
+      <div class="app-card">
+        <div class="app-header" style="background:#31A8FF;">Photoshop</div>
+        <div class="app-steps">
+          <div class="app-step"><div class="app-step-num" style="background:#31A8FF;">1</div><p>Imagen → Tamaño de imagen → Resolución: 300 ppp</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#31A8FF;">2</div><p>Imagen → Modo → CMYK Color</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#31A8FF;">3</div><p>Edición → Convertir a perfil → ISO Coated v2</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#31A8FF;">4</div><p>Guardar como TIFF: compresión LZW, sin pérdida</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#31A8FF;">5</div><p>Para PDF: Guardar como → Photoshop PDF/X-1a</p></div>
+          <div class="app-step"><div class="app-step-num" style="background:#31A8FF;">6</div><p>Sin compresión JPEG para impresión final</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>4.5 Tendencias en Impresión 2025–2026</h3>
+    <div class="trends-grid">
+      <div class="trend-card" style="border-left-color:#9B59B6;"><div class="trend-icon">✨</div><h4>UV Alto Relieve</h4><p>Barniz UV 3D que crea texturas táctiles sobre la superficie impresa. Usado en tarjetas de presentación premium y packaging de lujo.</p></div>
+      <div class="trend-card" style="border-left-color:#F39C12;"><div class="trend-icon">🥇</div><h4>Tintas Metálicas y Nácar</h4><p>Efecto metalizado sin laminado; impresión directa en offset y digital. Muy usado en etiquetas de vinos y cosméticos.</p></div>
+      <div class="trend-card" style="border-left-color:#E74C3C;"><div class="trend-icon">🖨</div><h4>Impresión 3D</h4><p>Creación de piezas volumétricas capa por capa para empaques especiales, displays y prototipos de diseño.</p></div>
+      <div class="trend-card" style="border-left-color:#27AE60;"><div class="trend-icon">🌿</div><h4>Sostenibilidad FSC/PEFC</h4><p>Tintas base agua, papeles certificados y empaques 100 % reciclables. Tendencia obligatoria en Europa y Latinoamérica.</p></div>
+      <div class="trend-card" style="border-left-color:#3498DB;"><div class="trend-icon">📊</div><h4>Impresión de Datos Variables</h4><p>Cada pieza lleva contenido único: nombre, código QR exclusivo, oferta personalizada. Para mailing y campanas one-to-one.</p></div>
+      <div class="trend-card" style="border-left-color:#16A085;"><div class="trend-icon">👕</div><h4>Sublimación Textil</h4><p>Fotografía permanente en telas de poliéster con colores plenos. Para moda, artículos promocionales y decoración textil.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- SECCIÓN 5: GLOSARIO -->
+<!-- ========================================================= -->
+<hr class="section-divider" />
+<section id="glosario">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Glosario del Lenguaje Digital del Diseño</h2>
+  </div>
+  <p style="margin-bottom:1.5rem;">Términos esenciales que todo diseñador gráfico debe conocer y manejar con precisión.</p>
+  <div class="glossary-grid">
+    <div class="glossary-row"><div class="glossary-term">Resolución (ppp/dpi)</div><div class="glossary-def">Cantidad de puntos por pulgada lineal. Determina la nitidez de una imagen. <strong>300 ppp</strong> es el estándar para impresión profesional; 72 ppp para pantalla.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Vector</div><div class="glossary-def">Imagen compuesta por ecuaciones matemáticas (líneas, curvas, puntos de anclaje). Es escalable infinitamente sin perder calidad. Formatos: AI, SVG, EPS.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Raster / Bitmap</div><div class="glossary-def">Imagen formada por una cuadrícula de píxeles. Tiene resolución fija; ampliarla pierde calidad (pixelación). Formatos: JPEG, PNG, TIFF, PSD.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Tipografía</div><div class="glossary-def">Arte y técnica de organizar y diseñar tipos (letras). Incluye elección de fuentes, tamaños, interlineado, kerning y jerarquía visual en el texto.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Composición</div><div class="glossary-def">Organización y disposición de todos los elementos visuales (texto, imagen, color, espacio) dentro de una pieza gráfica para lograr equilibrio y comunicación efectiva.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Empaquetado de archivos</div><div class="glossary-def">Proceso de reunir todos los archivos necesarios (fuentes, imágenes vinculadas, perfiles de color) en una carpeta para enviar al impresor. En InDesign: <em>Archivo → Empaquetar</em>.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Retícula / Grid</div><div class="glossary-def">Sistema de líneas invisibles (filas y columnas) que organiza el espacio en un diseño. Garantiza alineación, consistencia y ritmo visual a lo largo de una publicación.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Maquetación</div><div class="glossary-def">Proceso de distribuir y organizar textos e imágenes dentro de un soporte (página, pantalla, empaque) siguiendo una estructura y jerarquía visual clara.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Sangrado</div><div class="glossary-def">Extensión de los elementos gráficos más allá del borde de corte del documento (normalmente 3 mm). Evita franjas blancas en los bordes tras el corte con guillotina.</div></div>
+    <div class="glossary-row"><div class="glossary-term">.psd</div><div class="glossary-def">Formato nativo de Adobe Photoshop. Conserva capas, máscaras, canales y todos los datos de edición. Solo abre completamente en Photoshop.</div></div>
+    <div class="glossary-row"><div class="glossary-term">.ai</div><div class="glossary-def">Formato nativo de Adobe Illustrator. Guarda gráficos vectoriales con capas, símbolos y estilos. Para entregar al impresor se exporta como PDF o EPS.</div></div>
+    <div class="glossary-row"><div class="glossary-term">Behance</div><div class="glossary-def">Plataforma de Adobe para compartir y descubrir proyectos de diseño creativo. Funciona como portafolio profesional en línea y red social para creativos de todo el mundo.</div></div>
+  </div>
+</section>
+
+<!-- ========================================================= -->
+<!-- SECCIÓN 6: EJERCICIO -->
+<!-- ========================================================= -->
+<hr class="section-divider" />
+<section id="ejercicio">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Ejercicio Práctico: Exportar un Ícono en 3 Formatos</h2>
+  </div>
+  <p style="margin-bottom:1.5rem;"><strong>Objetivo:</strong> Diseñar un ícono simple en Adobe Illustrator y exportarlo en SVG, PNG y JPG para comparar calidad, peso de archivo y usos recomendados.</p>
+
+  <div class="subsection">
+    <h3>Pasos del Ejercicio</h3>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><p><strong>Crear el documento:</strong> Nuevo documento en Illustrator — 512 × 512 px, modo RGB, 72 ppp.</p></div>
+      <div class="step"><div class="step-num">2</div><p><strong>Diseñar el ícono:</strong> Ícono simple (ejemplo: cámara fotográfica) con herramienta Rectángulo, Elipse y formas básicas. Usar colores planos (flat design).</p></div>
+      <div class="step"><div class="step-num">3</div><p><strong>Exportar como SVG:</strong> Archivo → Exportar como → SVG → Estilo: CSS Interno; Minificar activado.</p></div>
+      <div class="step"><div class="step-num">4</div><p><strong>Exportar como PNG:</strong> Archivo → Exportar para pantallas → PNG 24 → Fondo transparente → Guardar.</p></div>
+      <div class="step"><div class="step-num">5</div><p><strong>Exportar como JPG:</strong> Archivo → Exportar para pantallas → JPEG, calidad 80 % → Fondo sólido (JPG no soporta transparencia).</p></div>
+      <div class="step"><div class="step-num">6</div><p><strong>Comparar:</strong> Verificar tamaño de archivo y calidad visual al escalar cada formato al 200 %.</p></div>
+    </div>
+  </div>
+
+  <div class="subsection">
+    <h3>Tabla Comparativa de Resultados</h3>
+    <div class="fmt-compare">
+      <div class="fmt-card" style="background:#1a1a2e;color:white;">
+        <h3 style="color:#27AE60;">SVG</h3>
+        <div class="fmt-sub">Vectorial · Escalable</div>
+        <div class="fmt-row"><span>Tamaño aprox.</span><span class="fmt-val" style="color:#27AE60;">2 – 8 KB</span></div>
+        <div class="fmt-row"><span>Transparencia</span><span class="fmt-val">✅ Nativa</span></div>
+        <div class="fmt-row"><span>Calidad al escalar</span><span class="fmt-val" style="color:#27AE60;">Perfecta ∞</span></div>
+        <div class="fmt-row"><span>Editable con código</span><span class="fmt-val">✅ XML</span></div>
+        <div class="fmt-row"><span>Animación</span><span class="fmt-val">✅ Con CSS</span></div>
+        <div class="fmt-row"><span>Uso ideal</span><span class="fmt-val">Web, apps</span></div>
+      </div>
+      <div class="fmt-card" style="background:#1a2a4a;color:white;">
+        <h3 style="color:#3498DB;">PNG</h3>
+        <div class="fmt-sub">Raster · Sin pérdida</div>
+        <div class="fmt-row"><span>Tamaño aprox.</span><span class="fmt-val" style="color:#3498DB;">15 – 80 KB</span></div>
+        <div class="fmt-row"><span>Transparencia</span><span class="fmt-val">✅ Canal alfa</span></div>
+        <div class="fmt-row"><span>Calidad al escalar</span><span class="fmt-val" style="color:#F39C12;">Se pixela</span></div>
+        <div class="fmt-row"><span>Editable con código</span><span class="fmt-val">❌ No</span></div>
+        <div class="fmt-row"><span>Animación</span><span class="fmt-val">❌ No</span></div>
+        <div class="fmt-row"><span>Uso ideal</span><span class="fmt-val">Iconos con transparencia</span></div>
+      </div>
+      <div class="fmt-card" style="background:#2a1a1a;color:white;">
+        <h3 style="color:#E74C3C;">JPG</h3>
+        <div class="fmt-sub">Raster · Con pérdida</div>
+        <div class="fmt-row"><span>Tamaño aprox.</span><span class="fmt-val" style="color:#27AE60;">8 – 40 KB</span></div>
+        <div class="fmt-row"><span>Transparencia</span><span class="fmt-val" style="color:#E74C3C;">❌ No soporta</span></div>
+        <div class="fmt-row"><span>Calidad al escalar</span><span class="fmt-val" style="color:#E74C3C;">Se pixela + artefactos</span></div>
+        <div class="fmt-row"><span>Editable con código</span><span class="fmt-val">❌ No</span></div>
+        <div class="fmt-row"><span>Animación</span><span class="fmt-val">❌ No</span></div>
+        <div class="fmt-row"><span>Uso ideal</span><span class="fmt-val">Fotografías, banners</span></div>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:1.5rem;"><strong>💡 Conclusión del ejercicio:</strong> Para íconos en interfaces digitales, <strong>SVG</strong> es la primera opción por su escalabilidad y ligereza. <strong>PNG</strong> es ideal cuando se necesita transparencia en sistemas que no soportan SVG. <strong>JPG</strong> solo para fotografías o cuando el fondo es sólido y el peso del archivo es crítico.</div>
+  </div>
+</section>
+
+<!-- ===== FUENTES ===== -->
+<hr class="section-divider" />
+<section>
+  <h2 style="color:#1F4E79; margin-bottom:1rem;">Fuentes y Referencias</h2>
+  <ul style="list-style:none; display:flex; flex-direction:column; gap:0.5rem;">
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">Adobe Systems. (2024). <em>Adobe Color: Color wheel and color palettes.</em> adobe.com</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">Bann, D. (2022). <em>The All New Print Production Handbook.</em> RotoVision.</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">Fogra Research Institute. (2023). <em>FOGRA Media Wedge for quality control in digital proof.</em> fogra.org</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">International Color Consortium. (2024). <em>ICC Profile Specifications.</em> color.org</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">ISO 216:2007. <em>Writing paper and certain classes of printed matter — Trimmed sizes.</em> iso.org</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">Munari, B. (1975). <em>Diseño y comunicación visual.</em> Gustavo Gili.</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">Pipes, A. (2009). <em>Production for Graphic Designers (5th ed.).</em> Laurence King.</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">Samara, T. (2014). <em>Making and Breaking the Grid.</em> Rockport Publishers.</li>
+    <li style="font-size:0.88rem; color:#555; font-style:italic;">White, A. W. (2011). <em>The Elements of Graphic Design.</em> Allworth Press.</li>
+  </ul>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <strong>Explorando el Lenguaje Digital del Diseño</strong><br>
+  El Color, Producción Gráfica y Preparación para Impresión y Formatos · 2026<br><br>
+  <span style="opacity:0.6; font-size:0.8rem;">Trabajo de Consulta · Producción Gráfica</span>
+</footer>
+
+</body>
+</html>
